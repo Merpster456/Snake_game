@@ -11,21 +11,61 @@ int x = 0, y = 0;
 int fruitx, fruity;
 int size = 0;
 int next_x = 0, next_y = 0;
-//int directionx, directiony;
 int bx = 5, bx2 = 5;
 int by = 5, by2 = 5;
+int flag;
 
 void game() {
-    
+}
+void input(){
+    if (getch()) {
+        switch (getch()) {
+            case 'a':
+                flag = 1;
+                break;
+            case 's':
+                flag = 2;
+                break;
+            case 'd':
+                flag = 3;
+                break;
+            case 'w':
+                flag = 4;
+                break;
+            case 'x':
+                gameover = 1;
+                break;
+            default:
+                break;
+            
+        }
+    }
+}
+void logic(){
+    switch (flag) {
+        case 1:
+            x--; 
+            break;
+        case 2:
+            y++;
+            break;
+        case 3:
+            x++;
+            break;
+        case 4:
+            y--;
+            break;
+    }
 }
 
 void setup() {
     initscr();
     noecho();
+    cbreak();
     curs_set(FALSE);
 
-    x = WIDTH/2;
-    y = HEIGHT/2;
+    x = (WIDTH/2) + 5;
+    y = (HEIGHT/2) + 5;
 
     int lower = 6;
     int upper = 34;
@@ -73,10 +113,10 @@ int main() {
 
     setup();
     boundaries();
-    char c;
-    scanf("%c", &c);
-    if (c) {
-        endwin();     
-    }
+//    while (!gameover) {
+  //      game();
+    //    input();
+      //  logic();
+   // }
     return 0;
 }
