@@ -1,8 +1,8 @@
-#Snake Game!
+# Snake Game!
 
 This is a very simple snake game I am creating with C.
 
-###Libraries
+### Libraries
 
 I am taking advantage of the ncurses library to create my game.
 
