@@ -9,17 +9,29 @@
 int gameover = 0, score = 0;
 int x = 0, y = 0;
 int fruitx, fruity;
-int size = 0;
+int size = 1;
 int next_x = 0, next_y = 0;
 int bx = 5, bx2 = 5;
 int by = 5, by2 = 5;
 int flag;
+WINDOW *game_window;
 
 void game() {
+    wclear(game_window);
+    for (int i = 0; i < size; i++) {
+        if (size == 1) {
+        mvprintw(y,x,"0");
+        } else {
+            mvprintw(y,x, "o");
+        }
+    }
+    mvprintw(fruity, fruitx, "*");   
+    wrefresh(game_window);
 }
 void input(){
-    if (getch()) {
-        switch (getch()) {
+    char ch;
+    if ((ch = getch())){
+        switch (ch) {
             case 'a':
                 flag = 1;
                 break;
@@ -37,7 +49,6 @@ void input(){
                 break;
             default:
                 break;
-            
         }
     }
 }
@@ -56,6 +67,19 @@ void logic(){
             y--;
             break;
     }
+    int mx;
+    int my;
+    int bx;
+    int by;
+    getmaxyx(game_window, my, mx);
+    getbegyx(game_window, by, bx);
+
+    if (x > mx + 5 || x < bx || y > my + 5 || y < by) {
+        gameover = 1;
+    } else if (x == fruitx && y == fruity) {
+        score += 10;
+        size++;
+    }
 }
 
 void setup() {
@@ -63,6 +87,8 @@ void setup() {
     noecho();
     cbreak();
     curs_set(FALSE);
+
+    game_window = newwin(HEIGHT -1, WIDTH -1, 6, 6);
 
     x = (WIDTH/2) + 5;
     y = (HEIGHT/2) + 5;
@@ -109,14 +135,32 @@ void boundaries() {
     }
 }
 
+void endmsg(){
+    while (!getch()) {
+        clear();
+        mvprintw((HEIGHT/2)+5, (WIDTH/2) + 5, "~~~GAME OVER~~~");
+        mvprintw((HEIGHT/2)+7, (WIDTH/2) + 5, "Score: %i", score);
+        mvprintw((HEIGHT/2)+8, (WIDTH/2) + 5, "Size: %i", size);
+        mvprintw((HEIGHT/2)+11, (WIDTH/2) + 5, "Press any button to quit");
+        refresh();
+    }
+    clear();
+    delwin(game_window);
+    refresh();
+    endwin();
+}
+
 int main() {
 
     setup();
     boundaries();
-//    while (!gameover) {
-  //      game();
-    //    input();
-      //  logic();
-   // }
+
+    while (!gameover) {
+            game();
+            input();
+            logic();
+            usleep(DELAY);
+    }
+    endmsg();
     return 0;
 }
